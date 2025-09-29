@@ -46,7 +46,6 @@ steps:
 
     
   - task: PublishPipelineArtifact@1
-   displayName: 'Publishing the artifacts'
     inputs:
       pathToPublish: 'output'
       artifactName: 'ml-artifacts'
