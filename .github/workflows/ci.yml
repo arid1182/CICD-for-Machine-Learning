@@ -44,6 +44,8 @@ steps:
     script: 'make eval'
   env:
     REPO_TOKEN: $(System.AccessToken)  # Azure DevOps equivalent of GITHUB_TOKEN
+    ML_DRIVER: azure
+    CI: true
 
 - task: CmdLine@2
   displayName: 'Update Branch'
