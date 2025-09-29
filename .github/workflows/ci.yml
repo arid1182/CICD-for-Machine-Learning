@@ -15,7 +15,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  - task: Checkout@7.2
+  - checkout: self
+    persistCredentials: true
     displayName: 'Checkout Repository'
 
   - script: |
