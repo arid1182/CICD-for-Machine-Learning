@@ -37,12 +37,13 @@ steps:
 
   - script: |
       make eval
-    displayName: 'Evaluation'
+      make package-artifacts
+    displayName: 'Evaluation & Package Artifacts'
     
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: report.md
-      artifact: model-report
-      publishLocation: pipeline
+      pathToPublish: 'output'
+      artifactName: 'ml-artifacts'
+      publishLocation: 'Container'
 
     
