@@ -16,11 +16,11 @@ pool:
 
 steps:
   - checkout: self
-    persistCredentials: true
+      persistCredentials: true
     displayName: 'Checkout Repository'
   
   - script: |
-    npm install -g @dvcorg/cml
+      npm install -g @dvcorg/cml
     displayName: 'Install CML'
 
   - script: |
