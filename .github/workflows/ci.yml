@@ -1,30 +1,54 @@
-name: Continuous Integration
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-  
-permissions: write-all
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: iterative/setup-cml@v2
-      - name: Install Packages
-        run: make install
-      - name: Format
-        run: make format
-      - name: Train
-        run: make train
-      - name: Evaluation
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: make eval
-      - name: Update Branch
-        env:
-          NAME: ${{ secrets.USER_NAME }}
-          EMAIL: ${{ secrets.USER_EMAIL }}
-        run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
+trigger:
+  branches:
+    include:
+    - main
+
+pr:
+  branches:
+    include:
+    - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: global-variables  # Optional: for shared variables
+
+steps:
+- checkout: self
+
+- task: CmdLine@2
+  displayName: 'Install CML'
+  inputs:
+    script: |
+      npm install -g @dvcorg/cml
+
+- task: CmdLine@2
+  displayName: 'Install Packages'
+  inputs:
+    script: 'make install'
+
+- task: CmdLine@2
+  displayName: 'Format Code'
+  inputs:
+    script: 'make format'
+
+- task: CmdLine@2
+  displayName: 'Train Model'
+  inputs:
+    script: 'make train'
+
+- task: CmdLine@2
+  displayName: 'Evaluation'
+  inputs:
+    script: 'make eval'
+  env:
+    REPO_TOKEN: $(System.AccessToken)  # Azure DevOps equivalent of GITHUB_TOKEN
+
+- task: CmdLine@2
+  displayName: 'Update Branch'
+  inputs:
+    script: 'make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)"'
+  env:
+    NAME: $(USER_NAME)
+    EMAIL: $(USER_EMAIL)
