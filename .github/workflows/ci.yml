@@ -18,6 +18,10 @@ steps:
   - checkout: self
     persistCredentials: true
     displayName: 'Checkout Repository'
+  
+  - script: |
+    npm install -g @dvcorg/cml
+    displayName: "Install CML"
 
   - script: |
       make install
