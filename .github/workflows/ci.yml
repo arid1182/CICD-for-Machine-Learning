@@ -1,41 +1,44 @@
 trigger:
   branches:
     include:
-    - main
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+# Manual trigger also supported
+# In Azure DevOps, "workflow_dispatch" equivalent is "Run Pipeline" button in UI.
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  USER_NAME: '$(Build.RequestedFor)'
-  USER_EMAIL: '$(Build.RequestedForEmail)'
-
 steps:
-- checkout: self
-  persistCredentials: true
+  - task: self
+    displayName: 'Checkout Repository'
 
-- script: |
-    pip install dvc cml
-  displayName: 'Install CML'
+  - script: |
+      make install
+    displayName: 'Install Packages'
 
-- script: 'make install'
-  displayName: 'Install Packages'
+  - script: |
+      make format
+    displayName: 'Format Code'
 
-- script: 'make format'
-  displayName: 'Format Code'
+  - script: |
+      make train
+    displayName: 'Train Model'
 
-- script: 'make train'
-  displayName: 'Train Model'
+  - script: |
+      make eval
+    displayName: 'Evaluation'
+    env:
+      REPO_TOKEN: $(System.AccessToken)   # Azure DevOps equivalent of GitHub Token
 
-- script: 'make eval'
-  displayName: 'Evaluation'
-  env:
-    REPO_TOKEN: $(System.AccessToken)
-    # ✅ CRITICAL: Set CML driver for Azure DevOps
-    CML_DRIVER: azure
-    CI: true
-
-- script: |
-    make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)"
-  displayName: 'Update Branch'
-  condition: succeeded()
+  - script: |
+      make update-branch USER_NAME=$(USER_NAME) USER_EMAIL=$(USER_EMAIL)
+    displayName: 'Update Branch'
+    env:
+      USER_NAME: $(USER_NAME)
+      USER_EMAIL: $(USER_EMAIL)
