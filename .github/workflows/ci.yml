@@ -39,8 +39,13 @@ steps:
       make eval
       make package-artifacts
     displayName: 'Evaluation & Package Artifacts'
+  
+    - script: ls -R output
+    displayName: 'Verify packaged artifacts'
+
     
   - task: PublishPipelineArtifact@1
+  displayName: 'Publishing the artifacts'
     inputs:
       pathToPublish: 'output'
       artifactName: 'ml-artifacts'
