@@ -38,12 +38,11 @@ steps:
   - script: |
       make eval
     displayName: 'Evaluation'
-    env:
-      REPO_TOKEN: $(System.AccessToken)   # Azure DevOps equivalent of GitHub Token
+    
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: report.md
+      artifact: model-report
+      publishLocation: pipeline
 
-  - script: |
-      make update-branch USER_NAME=$(USER_NAME) USER_EMAIL=$(USER_EMAIL)
-    displayName: 'Update Branch'
-    env:
-      USER_NAME: $(USER_NAME)
-      USER_EMAIL: $(USER_EMAIL)
+    
