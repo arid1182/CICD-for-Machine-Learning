@@ -3,55 +3,39 @@ trigger:
     include:
     - main
 
-pr:
-  branches:
-    include:
-    - main
-
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: global-variables  # Optional: for shared variables
+  USER_NAME: '$(Build.RequestedFor)'
+  USER_EMAIL: '$(Build.RequestedForEmail)'
 
 steps:
 - checkout: self
   persistCredentials: true
 
-- task: CmdLine@2
+- script: |
+    pip install dvc cml
   displayName: 'Install CML'
-  inputs:
-    script: |
-      npm install -g @dvcorg/cml
 
-- task: CmdLine@2
+- script: 'make install'
   displayName: 'Install Packages'
-  inputs:
-    script: 'make install'
 
-- task: CmdLine@2
+- script: 'make format'
   displayName: 'Format Code'
-  inputs:
-    script: 'make format'
 
-- task: CmdLine@2
+- script: 'make train'
   displayName: 'Train Model'
-  inputs:
-    script: 'make train'
 
-- task: CmdLine@2
+- script: 'make eval'
   displayName: 'Evaluation'
-  inputs:
-    script: 'make eval'
   env:
-    REPO_TOKEN: $(System.AccessToken)  # Azure DevOps equivalent of GITHUB_TOKEN
-    ML_DRIVER: azure
+    REPO_TOKEN: $(System.AccessToken)
+    # ✅ CRITICAL: Set CML driver for Azure DevOps
+    CML_DRIVER: azure
     CI: true
 
-- task: CmdLine@2
+- script: |
+    make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)"
   displayName: 'Update Branch'
-  inputs:
-    script: 'make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)"'
-  env:
-    NAME: $(USER_NAME)
-    EMAIL: $(USER_EMAIL)
+  condition: succeeded()
