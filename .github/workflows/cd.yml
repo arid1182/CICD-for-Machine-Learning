@@ -13,5 +13,14 @@ steps:
   - script: |
       pip install -U "huggingface_hub[cli]"
     displayName: 'Install Hugging Face CLI'
+  
+   - script: |
+      make hf-login
+    displayName: 'Login Huggingface_hub'
 
+  - script: |
+      make deploy HF=$(HF)
+    displayName: 'Deploy to Hugging Face'
+    env:
+      HF: $(HF) 
 
