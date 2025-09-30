@@ -30,7 +30,7 @@ update-branch:
 	git push --force origin HEAD:update
 
 hf-login: 
-	huggingface-cli login --token $(HF) --add-to-git-credential
+	hf auth login --token $(HF) --add-to-git-credential
 
 push-hub: 
 	huggingface-cli upload kingabzpro/Drug-Classification ./App --repo-type=space --commit-message="Sync App files"
