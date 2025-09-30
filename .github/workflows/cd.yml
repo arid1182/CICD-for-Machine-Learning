@@ -7,7 +7,7 @@ pool:
 
 steps:
   - checkout: self
-      persistCredentials: true
+    persistCredentials: true
     displayName: 'Checkout Repository'
 
   - script: |
