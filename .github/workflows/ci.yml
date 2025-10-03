@@ -34,12 +34,14 @@ steps:
       make train
     displayName: 'Train Model'
 
-  - script: make eval
-    env:
-      REPO_TOKEN: $(GITHUB_TOKEN)
-    displayName: 'Evaluation & Package Artifacts'
+  - script: |
+    cml comment create report.md \
+          --repo "$(Build.Repository.Name)" \
+          --commit "$(Build.SourceVersion)" \
+          --token "$(System.AccessToken)" \
+          --driver azure-devops
+   
     
-
 
   - script: |
     displayName: 'Update Branch'
