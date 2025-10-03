@@ -36,9 +36,26 @@ steps:
 
   - script: |
       make eval
-      make package-artifacts
     displayName: 'Evaluation & Package Artifacts'
+    env:
+      REPO_TOKEN: $(GITHUB_TOKEN)
   
+
+  - script: |
+    displayName: 'Update Branch'
+    env:
+      USER_NAME: $(USER_NAME)
+      USER_EMAIL: $(USER_EMAIL)
+      GITHUB_TOKEN: $(GITHUB_TOKEN)
+      GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
+
+
+
+
+
+
+
+      
   - script: 
       ls -R output
     displayName: 'Verify packaged artifacts'
