@@ -34,8 +34,7 @@ steps:
       make train
     displayName: 'Train Model'
 
-  - script: |
-      make eval
+  - script: make eval
     env:
       REPO_TOKEN: $(GITHUB_TOKEN)
     displayName: 'Evaluation & Package Artifacts'
@@ -50,17 +49,5 @@ steps:
       GITHUB_TOKEN: $(GITHUB_TOKEN)
       GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
       run: make update-branch USER_NAME=$USER_NAME USER_EMAIL=$USER_EMAIL
-
-
-  - script: 
-      ls -R output
-    displayName: 'Verify packaged artifacts'
-
-    
-  - task: PublishPipelineArtifact@1
-    inputs:
-      pathToPublish: 'output'
-      artifactName: 'ml-artifacts'
-      publishLocation: 'Container'
 
     
