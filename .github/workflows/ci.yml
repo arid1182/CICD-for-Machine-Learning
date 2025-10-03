@@ -35,10 +35,11 @@ steps:
     displayName: 'Train Model'
 
   - script: |
+      make eval
     env:
       REPO_TOKEN: $(GITHUB_TOKEN)
     displayName: 'Evaluation & Package Artifacts'
-      make eval
+    
 
 
   - script: |
