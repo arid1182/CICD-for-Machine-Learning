@@ -38,7 +38,7 @@ steps:
     env:
       REPO_TOKEN: $(GITHUB_TOKEN)
     displayName: 'Evaluation & Package Artifacts'
-      make eval
+    make eval
 
 
   - script: |
