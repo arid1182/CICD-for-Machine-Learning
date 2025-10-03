@@ -15,7 +15,7 @@ eval:
 	echo '\n## Confusion Matrix Plot' >> report.md
 	echo '![Confusion Matrix](./Results/model_results.png)' >> report.md
 	
-	cml comment create report.md --repo "$(Build.Repository.Name)" --commit "$(Build.SourceVersion)" --token "$(System.AccessToken)" --driver azure-devops
+	
 
 package-artifacts:
 	mkdir -p output
