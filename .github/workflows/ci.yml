@@ -50,12 +50,6 @@ steps:
       GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
 
 
-
-
-
-
-
-
   - script: 
       ls -R output
     displayName: 'Verify packaged artifacts'
