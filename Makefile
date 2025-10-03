@@ -17,7 +17,6 @@ eval:
 	
 	cml comment create report.md
 
-
 package-artifacts:
 	mkdir -p output
 	cp -r Results output/
