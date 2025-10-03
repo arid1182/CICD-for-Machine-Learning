@@ -35,11 +35,7 @@ steps:
     displayName: 'Train Model'
 
   - script: |
-    cml comment create report.md \
-          --repo "$(Build.Repository.Name)" \
-          --commit "$(Build.SourceVersion)" \
-          --token "$(System.AccessToken)" \
-          --driver azure-devops
+    cml comment create report.md --repo "$(Build.Repository.Name)" --commit "$(Build.SourceVersion)" --token "$(System.AccessToken)" --driver azure-devops
    
     
 
