@@ -36,6 +36,8 @@ steps:
 
   - script: |
       cml comment create report.md --repo "$(Build.Repository.Name)" --commit "$(Build.SourceVersion)" --token "$(System.AccessToken)" --driver azure-devops
+    env:
+      REPO_TOKEN: $(AccessToken)
    
     
   - script: |
