@@ -24,10 +24,10 @@ package-artifacts:
 
 
 update-branch:
-	git config --global user.name "$(USER_NAME)"
-	git config --global user.email "$(USER_EMAIL)"
-	git remote set-url origin https://"$(GITHUB_CONNECTION_USERNAME)":"$(GITHUB_TOKEN)"/github.com/arid1182/CICD-for-Machine-Learning.git
-	git commit -am "Update with new results:"$(build.BuildId)"" || echo "No Changes to Commit "
+	git config --global user.name $(USER_NAME)
+	git config --global user.email $(USER_EMAIL)
+	git remote set-url origin https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)/github.com/arid1182/CICD-for-Machine-Learning.git
+	git commit -am "Update with new results:$(build.BuildId)" || echo "No Changes to Commit "
 	git config --global credential.helper store
 	echo "https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)@github.com" > ~/.git-credentials
 	git push --force origin HEAD:update
