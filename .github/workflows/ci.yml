@@ -43,9 +43,10 @@ steps:
     displayName: 'Updating Current PR Branch'
     
 
-  - task: AzureDevOpsExtensions.CommonTasks.AttachSummaryMarkdown@1
+  - task: PublishMarkdownReports@1
     inputs:
-      filePath: $(Build.SourcesDirectory)/report.md
+      contentPath: $(Build.SourcesDirectory)
+      indexFile: report.md
 
   - script: |
     displayName: 'Update Branch'
