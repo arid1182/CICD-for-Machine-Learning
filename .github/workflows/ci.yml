@@ -39,13 +39,13 @@ steps:
     displayName: 'Evaluation & Package Artifacts'
 
   - script: |
-      make update-branch
+      make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)" GITHUB_CONNECTION_USERNAME="$(GITHUB_CONNECTION_USERNAME)" GITHUB_TOKEN="$(GITHUB_TOKEN)"
     displayName: 'Updating Current PR Branch'
     
 
   - task: PublishMarkdownReports@1
     inputs:
-      contentPath: $(Build.SourcesDirectory)
+      contentPath: $(Build.SourcesDirectory)/report.md
       indexFile: report.md
 
   - script: |
@@ -55,3 +55,4 @@ steps:
       USER_EMAIL: $(USER_EMAIL)
       GITHUB_TOKEN: $(GITHUB_TOKEN)
       GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
+     
