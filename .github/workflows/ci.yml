@@ -7,8 +7,6 @@ pr:
     include:
       - main
 
-# Manual trigger also supported
-# In Azure DevOps, "workflow_dispatch" equivalent is "Run Pipeline" button in UI.
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -39,8 +37,15 @@ steps:
     env:
       REPO_TOKEN: $(GITHUB_TOKEN)
     displayName: 'Evaluation & Package Artifacts'
+
+  - script: |
+      make update-branch
+    displayName: 'Updating Current PR Branch'
     
 
+  - task: AzureDevOpsExtensions.CommonTasks.AttachSummaryMarkdown@1
+    inputs:
+      filePath: $(Build.SourcesDirectory)/report.md
 
   - script: |
     displayName: 'Update Branch'
@@ -49,16 +54,3 @@ steps:
       USER_EMAIL: $(USER_EMAIL)
       GITHUB_TOKEN: $(GITHUB_TOKEN)
       GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
-      run: make update-branch USER_NAME=$USER_NAME USER_EMAIL=$USER_EMAIL
-
-
-  - script: 
-      ls -R output
-    displayName: 'Verify packaged artifacts'
-
-    
-  - task: PublishPipelineArtifact@1
-    inputs:
-      pathToPublish: 'output'
-      artifactName: 'ml-artifacts'
-      publishLocation: 'Container'
