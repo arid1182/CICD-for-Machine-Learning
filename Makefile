@@ -30,7 +30,7 @@ update-branch:
 	git config --global credential.helper store
 	echo "https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)@github.com" > ~/.git-credentials
 	git fetch origin update --update-head-ok
-	git checkout -B update origin/update 2>dev/null || git checkout -B update 
+	git checkout -B update origin/update 2>/dev/null || git checkout -B update 
 	git add -A
 	git commit -am "Update with new results:$(build.BuildId)" || echo "No Changes to Commit "
 	git push origin update --force-with-lease
