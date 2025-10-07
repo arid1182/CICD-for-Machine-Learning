@@ -46,7 +46,7 @@ steps:
 
   - task: PublishMarkdownReports@1
     inputs:
-      contentPath: $(Build.SourcesDirectory)/report.md
+      contentPath: $(Build.SourcesDirectory)
       indexFile: report.md
 
   - script: |
