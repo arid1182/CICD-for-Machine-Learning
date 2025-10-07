@@ -15,13 +15,6 @@ eval:
 	echo '\n## Confusion Matrix Plot' >> report.md
 	echo '![Confusion Matrix](./Results/model_results.png)' >> report.md
 	
-	
-
-package-artifacts:
-	mkdir -p output
-	cp -r Results output/
-	cp report.md output/
-
 
 update-branch:
 	git config --global user.name $(USER_NAME)
