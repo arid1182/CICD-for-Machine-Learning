@@ -29,10 +29,10 @@ update-branch:
 	git remote set-url origin https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)@github.com/arid1182/CICD-for-Machine-Learning.git
 	git config --global credential.helper store
 	echo "https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)@github.com" > ~/.git-credentials
-	git checkout -B origin/update --force
+	git checkout -B update 
 	git add -A
 	git commit -am "Update with new results:$(build.BuildId)" || echo "No Changes to Commit "
-	git push origin update
+	git push origin update --force
 
 
 hf-login: 
