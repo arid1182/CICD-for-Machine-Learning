@@ -1,5 +1,16 @@
 trigger: none
 
+resources:
+  pipelines:
+  - pipeline: ci-trigger
+    source: hf-CML
+    project: arid1182
+    trigger:
+      branches:
+        include:
+        - main
+
+
 pr: none
 
 pool:
@@ -19,4 +30,3 @@ steps:
     displayName: 'Deploy to Hugging Face'
     env:
       HF: $(HF) 
-
