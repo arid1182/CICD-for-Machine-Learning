@@ -17,7 +17,6 @@ stages:
   jobs:
   - job: deploy
     displayName: 'Deploying App'
-  steps:
   - script: |
         echo "CD Pipeline triggered by CI pipeline completion"
         echo "Build ID: $(resources.pipeline.ci-trigger.runID)"
