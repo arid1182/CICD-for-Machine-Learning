@@ -4,7 +4,6 @@ resources:
   pipelines:
   - pipeline: 'ci-trigger'
     source: 'hf-CML'
-    project: 'arid1182'
     trigger:
       branches:
         include:
