@@ -11,7 +11,6 @@ resources:
         include:
         - main
 
-
 stages:
 - stage: Deploy
   displayName: 'Deploying Application'
@@ -24,7 +23,6 @@ stages:
         echo "Build ID: $(resources.pipeline.ci-trigger.runID)"
         echo "Build Branch: $(resources.pipeline.ci-trigger.sourceBranch)"
     displayName: 'Log Trigger Informations'
-
 
 pool:
   vmImage: 'ubuntu-latest'
