@@ -19,15 +19,24 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - checkout: self
-      persistCredentials: true
-      displayName: 'Checkout Repository'
+    - checkout: none
+      displayName: 'Skip ADO Checkout'
     
     - script: |
         echo "CD Pipeline triggered by CI pipeline completion"
         echo "Build ID: $(resources.pipeline.ci-trigger.runID)"
         echo "Build Branch: $(resources.pipeline.ci-trigger.sourceBranch)"
+        echo "Deploying Application from Github 'update' branch"
       displayName: 'Log Trigger Informations'
+    
+    - task: Bash@3
+      displayName: 'Checkout from Github Account Branch'
+      
+    - script: |
+        make github-checkout
+      env:
+        GITHUB_TOKEN: $(GITHUB_TOKEN)
+
 
     - script: |
         pip install -U "huggingface_hub[cli]"
