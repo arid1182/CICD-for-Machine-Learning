@@ -1,49 +1,49 @@
-install:
-	pip install --upgrade pip &&\
-		pip install -r requirements.txt
+trigger: none
+pr: none
 
-format:
-	black *.py 
+resources:
+  pipelines:
+  - pipeline: 'ci-trigger'
+    source: 'hf-CML'
+    trigger:
+      branches:
+        include:
+        - main
 
-train:
-	python train.py
-
-
-eval:
-	echo "## Model Metrics" > report.md
-	cat ./Results/metrics.txt >> report.md
-	echo '\n## Confusion Matrix Plot' >> report.md
-	echo '![Confusion Matrix](./Results/model_results.png)' >> report.md
-	
-
-update-branch:
-	git config --global user.name $(USER_NAME)
-	git config --global user.email $(USER_EMAIL)
-	git remote set-url origin https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)@github.com/arid1182/CICD-for-Machine-Learning.git
-	git config --global credential.helper store
-	echo "https://$(GITHUB_CONNECTION_USERNAME):$(GITHUB_TOKEN)@github.com" > ~/.git-credentials
-	git fetch origin update --update-head-ok
-	git checkout -B update origin/update 2>/dev/null || git checkout -B update 
-	git add -A
-	git commit -am "Update with new results:$(build.BuildId)" || echo "No Changes to Commit "
-	git push origin update --force-with-lease
-
-
-github-checkout:
-    git clone -b update https://$(GITHUB_TOKEN)@github.com/arid1182/CICD-for-Machine-Learning.git
-    ls -la
-    git branch -a
-
-
-hf-login: 
-	hf auth login --token $(HF) --add-to-git-credential
+stages:
+- stage: Deploy
+  displayName: 'Deploying Application'
+  jobs:
+  - job: deploy
+    displayName: 'Deploying App'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: none
+      displayName: 'Skip ADO Checkout'
     
+    - script: |
+        echo "CD Pipeline triggered by CI pipeline completion"
+        echo "Build ID: $(resources.pipeline.ci-trigger.runID)"
+        echo "Build Branch: $(resources.pipeline.ci-trigger.sourceBranch)"
+        echo "Deploying Application from Github 'update' branch"
+      displayName: 'Log Trigger Informations'
+    
+    - task: Bash@3
+      displayName: 'Checkout from Github Account Branch'
+      inputs:
+        targetType: 'inline'
+        script: |
+          make github-checkout
+      env:
+        GITHUB_TOKEN: $(GITHUB_TOKEN)
 
-push-hub: 
-	hf upload tcse11itjr/Drug-Classifications ./App --repo-type=space --commit-message="Sync App files"
-	hf upload tcse11itjr/Drug-Classifications ./Model /Model --repo-type=space --commit-message="Sync Model"
-	hf upload tcse11itjr/Drug-Classifications ./Results /Metrics --repo-type=space --commit-message="Sync Model"
-
-deploy: hf-login push-hub
-
-all: install format train eval deploy
+    - script: |
+        pip install -U "huggingface_hub[cli]"
+      displayName: 'Install Hugging Face CLI'
+    
+    - script: |
+        make deploy HF=$(HF)
+      displayName: 'Deploy to Hugging Face'
+      env:
+        HF: $(HF)
