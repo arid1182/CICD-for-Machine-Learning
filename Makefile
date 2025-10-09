@@ -28,11 +28,10 @@ update-branch:
 	git commit -am "Update with new results:$(build.BuildId)" || echo "No Changes to Commit "
 	git push origin update --force-with-lease
 
-
 github-checkout:
-    git clone -b update https://$(GITHUB_TOKEN)@github.com/arid1182/CICD-for-Machine-Learning.git .
-    ls -la
-    git branch -a
+	git clone -b update https://$(GITHUB_TOKEN)@github.com/arid1182/CICD-for-Machine-Learning.git .
+	ls -la
+	git branch -a
 
 
 hf-login: 
