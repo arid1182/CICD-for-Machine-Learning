@@ -29,9 +29,14 @@ stages:
         echo "Deploying Application from Github 'update' branch"
       displayName: 'Log Trigger Informations'
     
-
-    - script: |
-        make github-checkout
+    - task: Bash@3
+      displayName: 'Checkout from GitHub Update Branch'
+      inputs:
+        targetType: 'inline'
+        script: |
+          git clone -b update https://$(GITHUB_TOKEN)@github.com/arid1182/CICD-for-Machine-Learning.git .
+          ls -la
+          git branch -a
       env:
         GITHUB_TOKEN: $(GITHUB_TOKEN)
 
@@ -40,7 +45,13 @@ stages:
       displayName: 'Install Hugging Face CLI'
     
     - script: |
+        echo "Current directory before make deploy:"
+        pwd
+        echo "Makefile contents:"
+        ls -la Makefile
+        echo "Running make deploy..."
         make deploy HF=$(HF)
+      
       displayName: 'Deploy to Hugging Face'
       env:
         HF: $(HF)
