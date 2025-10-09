@@ -31,12 +31,12 @@ stages:
     
     - task: Bash@3
       displayName: 'Checkout from Github Account Branch'
-      
-    - script: |
-        make github-checkout
+      inputs:
+        targetType: 'inline'
+        script: |
+          make github-checkout
       env:
         GITHUB_TOKEN: $(GITHUB_TOKEN)
-
 
     - script: |
         pip install -U "huggingface_hub[cli]"
