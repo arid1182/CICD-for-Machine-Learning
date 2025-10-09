@@ -29,12 +29,9 @@ stages:
         echo "Deploying Application from Github 'update' branch"
       displayName: 'Log Trigger Informations'
     
-    - task: Bash@3
-      displayName: 'Checkout from Github Account Branch'
-      inputs:
-        targetType: 'inline'
-        script: |
-          make github-checkout
+
+    - script: |
+        make github-checkout
       env:
         GITHUB_TOKEN: $(GITHUB_TOKEN)
 
