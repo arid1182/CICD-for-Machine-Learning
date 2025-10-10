@@ -83,7 +83,7 @@ stages:
 
           - script: |
               make install
-              pip install pytest pytest-cov
+              pip install pytest pytest-cov seaborn
             displayName: 'Installing Dependencies'
 
           - script: |
