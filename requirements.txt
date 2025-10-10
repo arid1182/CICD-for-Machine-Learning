@@ -4,4 +4,3 @@ numpy
 matplotlib
 skops
 black
-seaborn==0.13.0
