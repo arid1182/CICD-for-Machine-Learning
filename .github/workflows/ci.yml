@@ -96,7 +96,7 @@ stages:
             inputs:
               SonarCloud: SonarCloud
               organization: 'arid1182'
-              projectKey: 'arid118fhcml'
+              projectKey: 'arid1182_cicd-for-machine-learning'
               projectName: 'CICD-for-Machine-Learning'
               extraProperties: |
                 sonar.sources=.
