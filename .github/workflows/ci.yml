@@ -88,7 +88,7 @@ stages:
             displayName: 'Installing Dependencies'
 
           - script: |
-              python basic_pytest.py
+              python test_basic.py
             displayName: 'Running Basic Code Test using Pytest'
 
           - task: SonarCloudPrepare@1
