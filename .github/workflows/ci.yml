@@ -91,21 +91,23 @@ stages:
               python test_basic.py
             displayName: 'Running Basic Code Test using Pytest'
 
-          - task: SonarCloudPrepare@1
-            displayName: 'Prepare Sonar Cloud Analysis'
-            inputs:
-              SonarCloud: SonarCloud
-              organization: 'arid1182'
-              projectKey: 'arid1182_cicd-for-machine-learning'
-              projectName: 'CICD-for-Machine-Learning'
-              extraProperties: |
-                sonar.sources=.
-                sonar.language=py
-                sonar.python.version=3.8
-                sonar.exclusions=**/venv/**,**/.git/**,**/__pycache__/**
+          - script: |
+              curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+              unzip sonar-scanner.zip -d $HOME
+              export PATH=$HOME/sonar-scanner-5.0.1.3006-linux/bin:$PATH
+              sonar-scanner \
+                -Dsonar.projectKey=arid1182_CICD-for-Machine-Learning \
+                -Dsonar.organization=arid1182 \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.token=$(SONAR_TOKEN) \
+                -Dsonar.python.version=3.8 \
+                -Dsonar.python.coverage.reportPaths=coverage.xml \
+                -Dsonar.exclusions=**/venv/**,**/.git/**,**/__pycache__/**
+            displayName: "Run SonarCloud Analysis"
 
           - script: |
-              pytest --cov=. --cov-report=xml
+              pytest --cov=. --cov-report=xml -v
             displayName: 'Run Tests with Coverage'
           
           - task: SonarCloudAnalyze@1
