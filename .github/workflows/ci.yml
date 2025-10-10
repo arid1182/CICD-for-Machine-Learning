@@ -84,7 +84,6 @@ stages:
           - script: |
               make install
               pip install pytest pytest-cov
-              pip install --upgrade pip
               pip install seaborn
             displayName: 'Installing Dependencies'
 
@@ -96,7 +95,7 @@ stages:
             displayName: 'Prepare Sonar Cloud Analysis'
             inputs:
               SonarCloud: SonarCloud
-              organization: 'Mubasher Hassan'
+              organization: 'arid1182'
               projectKey: 'arid118fhcml'
               projectName: 'CICD-for-Machine-Learning'
               extraProperties: |
