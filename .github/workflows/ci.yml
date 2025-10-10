@@ -7,11 +7,11 @@ pr:
     include:
       - main
 
-stages:
-  - stage: 
+stages: 
+  - stage: 'Build'
     displayName: 'Build Application and Updating PR'
     jobs:
-    - job: Job_Builing
+    - job: Job_Building
       displayName: 'Builing Application'
       pool:
         vmImage: 'ubuntu-latest'
@@ -83,21 +83,22 @@ stages:
 
           - script: |
               make install
+              pip install pytest pytest-cov
             displayName: 'Installing Dependencies'
 
           - script: |
-              python pytest.py
+              python basic_pytest.py
             displayName: 'Running Basic Code Test using Pytest'
 
           - task: SonarCloudPrepare@1
             displayName: 'Prepare Sonar Cloud Analysis'
             inputs:
               SonarCloud: SonarCloud
-              organization: arid1182
-              projectKey: 'CICD-for-Machine-Learning'
-              projectName: 'hf-CML'
+              organization: 'Mubasher Hassan'
+              projectKey: 'arid118fhcml'
+              projectName: 'CICD-for-Machine-Learning'
               extraProperties: |
-                sonar.source=.
+                sonar.sources=.
                 sonar.language=py
                 sonar.python.version=3.8
                 sonar.exclusions=**/venv/**,**/.git/**,**/__pycache__/**
