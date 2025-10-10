@@ -17,22 +17,22 @@ def test_imports():
 
 def test_required_files_exist():
     """Test that required project files exist"""
-    required_files = ['train.py', 'requirements.txt', 'Makefile', 'report.md']
+    required_files = ['train.py', 'requirements.txt', 'Makefile', 'README.md']
     for file in required_files:
         assert os.path.exists(file), f"Required file {file} does not exist"
 
 def test_report_md_content():
-    """Test that report.md has content and was generated properly"""
-    assert os.path.exists('report.md'), "report.md does not exist"
+    """Test that README.md has content and was generated properly"""
+    assert os.path.exists('README.md'), "README.md does not exist"
     try:
-        with open('report.md', 'r') as f:
+        with open('README.md', 'r') as f:
             content = f.read()
-        assert len(content) > 0, "report.md is empty"
+        assert len(content) > 0, "README.md is empty"
         # Check if it contains expected sections (adjust based on your actual report content)
         if "Model Metrics" in content or "Results" in content or "#" in content:
-            print("✓ report.md contains expected content")
+            print("✓ README.md contains expected content")
     except Exception as e:
-        pytest.fail(f"Cannot read report.md: {e}")
+        pytest.fail(f"Cannot read README.md: {e}")
 
 def test_model_directories_created():
     """Test that model and results directories exist (created during training)"""
