@@ -83,7 +83,9 @@ stages:
 
           - script: |
               make install
-              pip install pytest pytest-cov seaborn
+              pip install pytest pytest-cov
+              pip install --upgrade pip
+              pip install seaborn
             displayName: 'Installing Dependencies'
 
           - script: |
