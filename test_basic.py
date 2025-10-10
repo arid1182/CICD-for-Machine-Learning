@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import pytest
+import os
 
 def test_imports():
     """Test that all required modules can be imported"""
@@ -9,36 +11,26 @@ def test_imports():
         import matplotlib.pyplot as plt
         import seaborn as sns
         from sklearn.ensemble import RandomForestClassifier
-        print("✓ All imports successful")
         assert True
     except ImportError as e:
-        assert False, f"Import error: {e}"
+        pytest.fail(f"Import error: {e}")
 
 def test_data_files():
     """Test that required data files exist"""
-    import os
     required_files = ['drug200.csv']
     for file in required_files:
-        if os.path.exists(file):
-            print(f"✓ File {file} exists")
-        else:
-            print(f"✗ File {file} missing")
-    # This is just a warning, not a failure
-    assert True
+        assert os.path.exists(file), f"Required file {file} does not exist"
 
-def test_model_files():
+def test_model_directories():
     """Test that model and results directories exist"""
-    import os
     required_dirs = ['Model', 'Results']
     for dir in required_dirs:
-        if os.path.exists(dir):
-            print(f"✓ Directory {dir} exists")
-        else:
-            print(f"✗ Directory {dir} missing")
-    assert True
+        assert os.path.exists(dir), f"Required directory {dir} does not exist"
 
-if __name__ == "__main__":
-    test_imports()
-    test_data_files()
-    test_model_files()
-    print("All basic tests passed!")
+def test_training_script_exists():
+    """Test that training script exists"""
+    assert os.path.exists('train.py'), "Training script train.py does not exist"
+
+def test_requirements_exists():
+    """Test that requirements file exists"""
+    assert os.path.exists('requirements.txt'), "requirements.txt does not exist"
