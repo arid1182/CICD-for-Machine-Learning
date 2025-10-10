@@ -7,53 +7,107 @@ pr:
     include:
       - main
 
+stages:
+  - stage: 
+    displayName: 'Build Application and Updating PR'
+    jobs:
+    - job: Job_Builing
+      displayName: 'Builing Application'
+      pool:
+        vmImage: 'ubuntu-latest'
 
-pool:
-  vmImage: 'ubuntu-latest'
+      steps:
+        - checkout: self
+          persistCredentials: true
+          fetchDepth: 0
+          displayName: 'Checkout Repository'
+        
+        - script: |
+            npm install -g @dvcorg/cml
+          displayName: 'Install CML'
 
-steps:
-  - checkout: self
-    persistCredentials: true
-    fetchDepth: 0
-    displayName: 'Checkout Repository'
-  
-  - script: |
-      npm install -g @dvcorg/cml
-    displayName: 'Install CML'
+        - script: |
+            make install
+          displayName: 'Install Packages'
 
-  - script: |
-      make install
-    displayName: 'Install Packages'
+        - script: |
+            make format
+          displayName: 'Format Code'
 
-  - script: |
-      make format
-    displayName: 'Format Code'
+        - script: |
+            make train
+          displayName: 'Train Model'
 
-  - script: |
-      make train
-    displayName: 'Train Model'
+        - script: |
+            make eval
+          env:
+            REPO_TOKEN: $(GITHUB_TOKEN)
+          displayName: 'Evaluation & Package Artifacts'
 
-  - script: |
-      make eval
-    env:
-      REPO_TOKEN: $(GITHUB_TOKEN)
-    displayName: 'Evaluation & Package Artifacts'
+        - script: |
+            make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)" GITHUB_CONNECTION_USERNAME="$(GITHUB_CONNECTION_USERNAME)" GITHUB_TOKEN="$(GITHUB_TOKEN)"
+          displayName: 'Updating Current PR Branch'
+          
 
-  - script: |
-      make update-branch USER_NAME="$(USER_NAME)" USER_EMAIL="$(USER_EMAIL)" GITHUB_CONNECTION_USERNAME="$(GITHUB_CONNECTION_USERNAME)" GITHUB_TOKEN="$(GITHUB_TOKEN)"
-    displayName: 'Updating Current PR Branch'
-    
+        - task: PublishMarkdownReports@1
+          inputs:
+            contentPath: $(Build.SourcesDirectory)
+            indexFile: report.md
 
-  - task: PublishMarkdownReports@1
-    inputs:
-      contentPath: $(Build.SourcesDirectory)
-      indexFile: report.md
+        - script: |
+          displayName: 'Update Branch'
+          env:
+            USER_NAME: $(USER_NAME)
+            USER_EMAIL: $(USER_EMAIL)
+            GITHUB_TOKEN: $(GITHUB_TOKEN)
+            GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
 
-  - script: |
-    displayName: 'Update Branch'
-    env:
-      USER_NAME: $(USER_NAME)
-      USER_EMAIL: $(USER_EMAIL)
-      GITHUB_TOKEN: $(GITHUB_TOKEN)
-      GITHUB_CONNECTION_USERNAME: $(GITHUB_CONNECTION_USERNAME)
-     
+  - stage: SAST
+    displayName: 'Security and Code Analysis'
+    jobs:
+      - job: sonar_analysis
+        displayName: 'SonarCloud Analysis'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+
+          - checkout: self
+            persistCredentials: true
+            displayName: 'Checkout Repository'
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.x'
+            displayName: 'Use Python 3.x'
+
+          - script: |
+              make install
+            displayName: 'Installing Dependencies'
+
+          - script: |
+              python pytest.py
+            displayName: 'Running Basic Code Test using Pytest'
+
+          - task: SonarCloudPrepare@1
+            displayName: 'Prepare Sonar Cloud Analysis'
+            inputs:
+              SonarCloud: SonarCloud
+              organization: arid1182
+              projectKey: 'CICD-for-Machine-Learning'
+              projectName: 'hf-CML'
+              extraProperties: |
+                sonar.source=.
+                sonar.language=py
+                sonar.python.version=3.8
+                sonar.exclusions=**/venv/**,**/.git/**,**/__pycache__/**
+
+          - script: |
+              pytest --cov=. --cov-report=xml
+            displayName: 'Run Tests with Coverage'
+          
+          - task: SonarCloudAnalyze@1
+            displayName: 'Running SonarCloud Analysis'
+          
+          - task: SonarCloudPublish@1
+            displayName: 'Publishing Quality Gate Result'
