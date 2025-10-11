@@ -98,6 +98,7 @@ stages:
               sonar-scanner \
                 -Dsonar.projectKey=arid1182_CICD-for-Machine-Learning \
                 -Dsonar.organization=arid1182 \
+                -Dsonar.branch.name=ci \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.token=$(SONAR_TOKEN) \
